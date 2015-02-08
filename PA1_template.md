@@ -7,7 +7,8 @@ output: html_document
 
 ## Part 1
 ### Histogram
-```{r part1Hist, echo = TRUE}
+
+```r
 # Assumes the file "activity.csv" is in the working directory.
 
 df_activity <- read.csv(file = "activity.csv",
@@ -33,17 +34,31 @@ plot(as.table(l1),
      ylab = "Total number of steps")
 ```
 
-### Mean and median
-```{r part1Me, echo = TRUE}
-mean(l1)
+![plot of chunk part1Hist](figure/part1Hist-1.png) 
 
+### Mean and median
+
+```r
+mean(l1)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(l1)
+```
+
+```
+## [1] 10765
 ```
 
 ## Part 2
 
 ### Time series plot
-```{r part2TimeSeriesPlot, echo = TRUE}
+
+```r
 #Make interval a factor in order to split on it:
 df_activity_complete_cases$interval <- as.factor(df_activity_complete_cases$interval)
 
@@ -67,8 +82,11 @@ plot(df_avg_steps$"interval",
      main = "Average number of steps averaged across all days")
 ```
 
+![plot of chunk part2TimeSeriesPlot](figure/part2TimeSeriesPlot-1.png) 
+
 ### Interval containing the maximum number of steps
-```{r maxInterval, echo = TRUE}
+
+```r
 #The column "avgSteps" is rounded to 4 decimals because the
 #max function only uses 4 decimals:
 n2 <- round(as.numeric(df_avg_steps$"avgSteps"), digits = 4)
@@ -80,19 +98,19 @@ i <- which(n2 == max(n2))  #The index (only one) for the maximum
 maxInterval <- df_avg_steps[i, ]$"interval"
 ```
 
-The 5-minute interval containing the maximum number of steps is `r maxInterval`.
+The 5-minute interval containing the maximum number of steps is 835.
 
 ## Part 3
 ### Total number of missing values
-```{r part3NumberRowsNA, echo = TRUE}
 
+```r
 #Total number of rows with NAs:
 naVec <- 
   is.na(df_activity$steps) | is.na(df_activity$date) | is.na(df_activity$interval)
 
 numberRowsNA <- sum(naVec)
 ```
-The total number of missing values in the dataset is `r numberRowsNA`.
+The total number of missing values in the dataset is 2304.
 
 ### Strategy for filling in all of the missing values in the dataset
 There are only missing values for the number of steps taken.
@@ -100,7 +118,8 @@ The chosen strategy for filling in all of the missing values in the dataset is t
 
 
 ### New dataset equal to the original dataset but with missing data filled in
-```{r part3NewDataset, echo = TRUE}
+
+```r
 #Dataset where each row has missing data:
 df_activity_NA <- df_activity[naVec, ]
 #The column "interval" is cast to the same type as that of "df_avg_steps"
@@ -132,7 +151,8 @@ df_activity_complete_cases_all <-
 ```
 
 ### Histogram
-```{r part3Hist, echo = TRUE}
+
+```r
 s3 <- split(df_activity_complete_cases_all, 
             df_activity_complete_cases_all$date, 
             drop = TRUE)
@@ -146,25 +166,38 @@ plot(as.table(l3),
      main = "Total number of steps taken each day",
      xlab = "Date",
      ylab = "Total number of steps")
-
 ```
 
-### Mean and median
-```{r part3Me, echo = TRUE}
-mean(l3)
+![plot of chunk part3Hist](figure/part3Hist-1.png) 
 
+### Mean and median
+
+```r
+mean(l3)
+```
+
+```
+## [1] 10765.64
+```
+
+```r
 median(l3)
 ```
 
-The original mean was `r sprintf("%0.2f", round(mean(l1), digits = 2))` and the new mean is  `r sprintf("%0.2f", round(mean(l3), digits = 2))`. The mean has decreased, so the values differ.
+```
+## [1] 10762
+```
 
-The original median was `r sprintf("%i", median(l1))` and the new median is `r sprintf("%i", median(l3))`. The median has decreased, so the values differ.
+The original mean was 10766.19 and the new mean is  10765.64. The mean has decreased, so the values differ.
+
+The original median was 10765 and the new median is 10762. The median has decreased, so the values differ.
 
 The two histograms show similar distribution patterns, but the latter histogram (which includes imputed values) show extra dates such as "2012-10-01". The extra dates are expected since the original dates had NA in the number of steps and the new ones have been updated with imputed values.
 
 ## Part 4
 ### New factor variable
-```{r part4NewFactor, echo = TRUE}
+
+```r
 #Get the weekday names for each of the dates:
 weekdaysVec <- 
   weekdays(as.Date(as.character(df_activity_complete_cases_all$"date")))
@@ -186,7 +219,8 @@ df_activity_complete_cases_all$weekdaysDivided <- weekdaysDividedVec
 ```
 
 ### Panel plot
-```{r part4PanelPlot, echo = TRUE}
+
+```r
 library(lattice)
 #Make column "interval" a factor in order to split on it later:
 df_activity_complete_cases_all$interval <-
@@ -241,3 +275,5 @@ p <- xyplot(avgSteps ~ interval | weekdaysDivided, data = df_avg_steps_all,
 
 print(p)
 ```
+
+![plot of chunk part4PanelPlot](figure/part4PanelPlot-1.png) 
